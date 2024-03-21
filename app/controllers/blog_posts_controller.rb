@@ -1,5 +1,6 @@
 class BlogPostsController < ApplicationController
   before_action :set_blog_post, only: %i[ show edit update destroy ]
+  before_action :authorize_writer, only: [:new, :create ,:edit, :update, :my_posts]
 
   # GET /blog_posts or /blog_posts.json
   def index
@@ -8,6 +9,11 @@ class BlogPostsController < ApplicationController
 
   # GET /blog_posts/1 or /blog_posts/1.json
   def show
+  end
+
+  # GET ALL BLOG POSTS BELONGING TO A USER
+  def my_posts
+    @blog_posts = current_user.blog_posts if current_user.role == "Writer"
   end
 
   # GET /blog_posts/new
@@ -21,8 +27,8 @@ class BlogPostsController < ApplicationController
 
   # POST /blog_posts or /blog_posts.json
   def create
-    @blog_post = BlogPost.new(blog_post_params)
-
+    @blog_post = current_user.blog_posts.build(blog_post_params)
+  
     respond_to do |format|
       if @blog_post.save
         format.html { redirect_to blog_post_url(@blog_post), notice: "Blog post was successfully created." }
@@ -57,6 +63,7 @@ class BlogPostsController < ApplicationController
     end
   end
 
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_blog_post
@@ -66,5 +73,12 @@ class BlogPostsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def blog_post_params
       params.require(:blog_post).permit(:title, :body)
+    end
+
+    def authorize_writer
+      unless current_user && current_user.role == "Writer"
+        flash[:alert] = "You are not authorized to access this page."
+        redirect_to root_path
+      end
     end
 end

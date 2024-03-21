@@ -2,9 +2,12 @@
 
 <%= render @blog_post %>
 
-<div>
-  <%= link_to "Edit this blog post", edit_blog_post_path(@blog_post) %> |
-  <%= link_to "Back to blog posts", blog_posts_path %>
+<% if current_user && (current_user.role == 'Writer' && current_user == @blog_post.user) %>
+  <div>
+    <%= link_to "Edit", edit_blog_post_path(@blog_post) %> |
+    <%= button_to "Delete", @blog_post, method: :delete %>
+  </div>
+<% end %>
 
-  <%= button_to "Destroy this blog post", @blog_post, method: :delete %>
-</div>
+<%= link_to "Back to blog posts", blog_posts_path %>
+
