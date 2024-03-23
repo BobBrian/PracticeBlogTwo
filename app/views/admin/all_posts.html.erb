@@ -1,0 +1,27 @@
+<!-- all_posts.html.erb -->
+<h1>All Posts Associated with <%= @user.username %> </h1>
+
+<% if @blog_posts.any? %>
+  <div class="table-responsive">
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Body</th>
+           <th>Delete</th> <!-- Add the Delete column -->
+        </tr>
+      </thead>
+      <tbody>
+        <% @blog_posts.each do |blog_post| %>
+          <tr>
+            <td><%= blog_post.title %></td>
+            <td><%= blog_post.body %></td>
+            <td><%= button_to 'Delete', destroy_post_path(blog_post), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %> </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p>This User has created no Posts.</p>
+<% end %>

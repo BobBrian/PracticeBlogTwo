@@ -12,6 +12,18 @@
         <%# Lists Go Here %>
         <% if user_signed_in? %>
           <% if current_user.role == 'Admin' %>
+            <li class="nav-item">
+              <%= link_to "View All Users", index_path, class:"nav-link" %>
+            </li>
+
+            <li class="nav-item">
+              <%= link_to "Edit Profile", edit_user_registration_path, class:"nav-link" %>
+            </li>
+
+            <li class="nav-item">
+              <%= link_to 'Sign Out', destroy_user_session_path, class: 'nav-link text-danger', data: { turbo_method: :delete } %>
+            </li>
+            
           <% elsif current_user.role == 'Writer' %>
             <li class="nav-item">
               <%= link_to "New Post", new_blog_post_path, class:"nav-link" %>
